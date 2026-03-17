@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SK Cold Chain Solutions Sdn Bhd - 3PL Portal Prototype
 
-## Getting Started
+A modern, high-performance web portal for Third-Party Logistics management, built with Next.js 15, Tailwind CSS, and shadcn/ui.
 
-First, run the development server:
+## 🛠️ Tech Stack
+- **Framework:** Next.js (App Router)
+- **Styling:** Tailwind CSS
+- **Components:** shadcn/ui (Radix UI primitives)
+- **Table Engine:** TanStack Table (React Table v8)
+- **Forms:** React Hook Form + Zod Validation
+- **Animations:** Framer Motion
 
+## 📊 Project Status & Roadmap
+
+### 🏗️ Core Architecture
+- [x] Dashboard Layout (Responsive + Collapsible Sidebar)
+- [x] Global Navigation (Client/Admin/Future Modules)
+- [x] Reusable Data Table Component (Search, Sort, Paginate, Row Selection)
+- [x] Export to PDF/Excel UI
+
+### 👤 Client Portal
+- [x] Login Page (Client/Admin Toggle + Branding)
+- [x] Profile / Update Page (Company Details + Password Reset)
+- [x] Stock Summary Page (Exact Columns: Item #, WH, Expiry, etc.)
+- [x] Stock Details Page (Drill-down view: Pallet #, Quantity per Pallet)
+- [x] Withdraw Request Page (Dynamic Rows + Unified Date Logic)
+- [x] Withdraw Request List (Order History + Animated Status Badges) - **DONE**
+- [x] Pallet Movement Page (Historical Ledger) - **DONE**
+
+### 🔑 Admin Portal
+- [x] User Management (Account Creation + Password Reset Dialogs)
+- [x] Admin Stock Summary (Global Filter by Customer) - **DONE**
+- [ ] Admin Withdraw Request List (Global Order List)
+- [x] SO Confirmation Page (Multi-Admin Lock + SAP Sync)
+
+### 🚀 Future Modules (Placeholders)
+- [x] Inbound / Packing List Submission
+- [x] Logistics & Forwarding
+- [x] Billing
+
+## 🚀 Deployment (Vercel)
+
+This project is optimized for deployment on [Vercel](https://vercel.com/).
+
+### Standard Deployment
+1.  **Push to GitHub/GitLab/Bitbucket:** Ensure your local changes are committed and pushed to your repository.
+2.  **Connect to Vercel:**
+    -   Log in to the Vercel Dashboard.
+    -   Click **"Add New"** > **"Project"**.
+    -   Import your repository.
+3.  **Configure Project:**
+    -   **Framework Preset:** Next.js (automatically detected).
+    -   **Root Directory:** `./`
+    -   **Build Command:** `next build`
+    -   **Output Directory:** `.next`
+    -   **Install Command:** `npm install`
+4.  **Deploy:** Click the **"Deploy"** button.
+
+### Manual CLI Deployment
+If you have the Vercel CLI installed:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install -g vercel
+vercel
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🏗️ Design Principles
+1. **Cold Chain Aesthetic:** Clean, high-contrast UI using Navy (#1e3a8a) and Ice Blue colors.
+2. **Contextual Alerts:** Expiry dates and stock levels use semantic color coding.
+3. **Efficiency:** Table pagination resets on search; bulk actions for dates and order processing.
