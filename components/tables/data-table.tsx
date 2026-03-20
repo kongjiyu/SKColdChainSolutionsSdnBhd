@@ -158,7 +158,7 @@ export function DataTable<TData, TValue>({
                       )}
                       onClick={header.column.getToggleSortingHandler()}
                     >
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-1.5 justify-center sm:justify-start [&:has(>div.text-center)]:justify-center">
                         {header.isPlaceholder
                           ? null
                           : flexRender(
@@ -184,7 +184,7 @@ export function DataTable<TData, TValue>({
             ))}
           </thead>
           <tbody className="divide-y divide-slate-100 bg-white">
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <motion.tr

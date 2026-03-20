@@ -70,7 +70,7 @@ export default function SOConfirmationPage() {
     {
       accessorKey: "withdrawNumber",
       header: "Withdraw #",
-      cell: ({ row }) => <span className="font-mono font-bold text-primary">{row.getValue("withdrawNumber")}</span>,
+      cell: ({ row }) => <span className="font-sans font-bold text-primary">{row.getValue("withdrawNumber")}</span>,
     },
     {
       accessorKey: "customerCode",

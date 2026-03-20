@@ -101,7 +101,7 @@ export default function PalletMovementPage() {
     {
       accessorKey: "palletNumber",
       header: "Pallet Number",
-      cell: ({ row }) => <span className="font-mono font-bold text-primary">{row.getValue("palletNumber")}</span>,
+      cell: ({ row }) => <span className="font-sans font-bold text-primary">{row.getValue("palletNumber")}</span>,
     },
     {
       accessorKey: "quantity",
