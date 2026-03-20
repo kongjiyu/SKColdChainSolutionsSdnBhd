@@ -78,7 +78,7 @@ export default function WithdrawListPage() {
       header: "Order Details",
       cell: ({ row }) => (
         <div className="flex flex-col">
-            <span className="font-mono font-bold text-primary tracking-tighter">
+            <span className="font-sans font-bold text-primary tracking-tighter">
                 {row.getValue("orderNumber")}
             </span>
             <span className="text-[10px] text-muted-foreground uppercase font-bold">
@@ -94,11 +94,11 @@ export default function WithdrawListPage() {
           className="flex items-center gap-1 hover:text-foreground transition-colors"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Order Date
+          ORDER DATE
           <ArrowUpDown className="h-3 w-3" />
         </button>
       ),
-      cell: ({ row }) => <div className="text-muted-foreground text-xs">{row.getValue("orderDate")}</div>,
+      cell: ({ row }) => <div className="text-muted-foreground text-[13px]">{row.getValue("orderDate")}</div>,
     },
     {
       accessorKey: "deliveryDate",
@@ -114,7 +114,7 @@ export default function WithdrawListPage() {
       accessorKey: "vehicleNumber",
       header: "Vehicle #",
       cell: ({ row }) => (
-        <div className="flex items-center gap-2 font-mono text-xs">
+        <div className="flex items-center gap-2 font-sans text-[13px]">
             <Truck className="h-3.5 w-3.5 text-muted-foreground" />
             {row.getValue("vehicleNumber")}
         </div>

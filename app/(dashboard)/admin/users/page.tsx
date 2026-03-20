@@ -73,7 +73,7 @@ export default function UserManagementPage() {
     {
       accessorKey: "customerCode",
       header: "Account Code",
-      cell: ({ row }) => <span className="font-mono font-bold text-primary">{row.getValue("customerCode")}</span>,
+      cell: ({ row }) => <span className="font-sans font-bold text-primary">{row.getValue("customerCode")}</span>,
     },
     {
       accessorKey: "customerName",
@@ -180,11 +180,15 @@ export default function UserManagementPage() {
         <StatsCard icon={Key} label="Password Resets (24h)" value="5" />
       </div>
 
-      <DataTable 
-        columns={columns} 
-        data={mockUsers} 
-        searchKey="customerName" 
-      />
+      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+        <div className="p-4">
+          <DataTable 
+            columns={columns} 
+            data={mockUsers} 
+            searchKey="customerName" 
+          />
+        </div>
+      </div>
 
       {/* Reset Password Dialog */}
       <Dialog open={isResetOpen} onOpenChange={setIsResetOpen}>

@@ -161,7 +161,7 @@ export default function ProfilePage() {
                 </div>
               </form>
             </CardContent>
-            <CardFooter className="bg-secondary/20 flex items-center justify-between py-4">
+            <CardFooter className="bg-card flex items-center justify-between py-4 rounded-b-xl border-t">
                 <AnimatePresence>
                     {isSuccess && (
                         <motion.div 

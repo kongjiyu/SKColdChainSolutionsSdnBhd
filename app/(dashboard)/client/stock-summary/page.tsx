@@ -40,7 +40,7 @@ const mockData: StockSummary[] = [
     storer: "ST001 - Nestle",
     itemNumber: "ITEM-9921",
     description: "Nestle Milo 1kg (Cold Storage)",
-    pallet: 45,
+    pallet: 405,
     quantity: 5400,
     warehouse: "1 (Cold)",
     containerNumber: "CNTR-10293",
@@ -51,7 +51,7 @@ const mockData: StockSummary[] = [
     storer: "ST001 - Nestle",
     itemNumber: "ITEM-4421",
     description: "Nestle Maggi Curry 5pk (Ambient)",
-    pallet: 12,
+    pallet: 123,
     quantity: 1440,
     warehouse: "2 (Ambient)",
     containerNumber: "CNTR-22910",
@@ -102,7 +102,7 @@ export default function StockSummaryPage() {
       header: "Storer",
       cell: ({ row }) => (
         <div className="flex flex-col py-1">
-          <span className="font-bold text-slate-900 leading-none">{row.getValue("storer")}</span>
+          <span className="font-medium text-slate-900 leading-none">{row.getValue("storer")}</span>
           <span className="text-[9px] text-slate-400 font-black uppercase mt-1 tracking-tight">{row.original.itemNumber}</span>
         </div>
       ),
@@ -111,8 +111,8 @@ export default function StockSummaryPage() {
       accessorKey: "description",
       header: "Description",
       cell: ({ row }) => (
-        <div className="max-w-[320px] group cursor-pointer">
-          <div className="font-black text-slate-900 truncate tracking-tight text-[13px] group-hover:text-primary transition-colors" title={row.getValue("description")}>
+        <div className="max-w-[320px] cursor-pointer">
+          <div className="font-medium text-slate-900 truncate tracking-tight text-[13px] hover:text-primary transition-colors" title={row.getValue("description")}>
             {row.getValue("description")}
           </div>
           <div className="flex items-center gap-1.5 mt-1">
@@ -127,20 +127,18 @@ export default function StockSummaryPage() {
     },
     {
       accessorKey: "pallet",
-      header: () => <div className="text-right px-2">Pallets</div>,
+      header: "Pallets",
       cell: ({ row }) => (
-        <div className="text-right px-2">
-            <span className="inline-block px-2 py-1 rounded-lg bg-slate-50 font-black text-slate-900 tabular-nums text-[13px] border border-slate-100/50">
-                {row.getValue("pallet")}
-            </span>
+        <div className="text-left font-medium text-[#475569] tabular-nums text-[13px]">
+            {row.getValue("pallet")}
         </div>
       ),
     },
     {
       accessorKey: "quantity",
-      header: () => <div className="text-right px-2">Quantity</div>,
+      header: "Quantity",
       cell: ({ row }) => (
-        <div className="text-right px-2 font-black text-slate-900 tabular-nums text-[13px] tracking-tight">
+        <div className="text-left font-medium text-[#475569] tabular-nums text-[13px] tracking-tight">
             {Number(row.getValue("quantity")).toLocaleString()}
         </div>
       ),
@@ -178,7 +176,7 @@ export default function StockSummaryPage() {
         return (
           <div className="flex flex-col">
             <div className={cn(
-                "font-mono text-[12px] font-black tracking-tighter leading-none",
+                "font-sans text-[12px] font-medium tracking-tighter leading-none",
                 isCritical ? "text-rose-600 underline decoration-rose-200 underline-offset-4" : isExpiringSoon ? "text-amber-600" : "text-slate-500"
             )}>
                 {dateStr}
@@ -260,7 +258,7 @@ export default function StockSummaryPage() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <KPICard icon={Box} label="TOTAL PALLETS" value="100" trend="+6" color="slate" />
                 <KPICard icon={TrendingUp} label="UNIT QUANTITY" value="12,040" trend="+12%" color="primary" />
                 <KPICard icon={ThermometerSnowflake} label="COLD STORAGE" value="68" subtitle="Units" color="blue" />
@@ -277,7 +275,7 @@ export default function StockSummaryPage() {
                     key={f.name}
                     onClick={() => setActiveFilter(f.name)}
                     className={cn(
-                        "px-4 py-2 rounded-xl text-[10px] font-black transition-all duration-300 flex items-center gap-2 group relative",
+                        "px-4 py-2 rounded-xl text-[10px] font-medium transition-all duration-300 flex items-center gap-2 group relative",
                         activeFilter === f.name 
                             ? "bg-white text-slate-900 shadow-[0_4px_20px_rgba(0,0,0,0.06)] scale-100" 
                             : "text-slate-500 hover:text-slate-900 hover:bg-white/50"
@@ -312,7 +310,7 @@ export default function StockSummaryPage() {
                     <Box size={18} className="text-slate-600" />
                 </div>
                 <div>
-                    <h3 className="font-black text-slate-900 text-[15px] tracking-tight">Inventory Ledger</h3>
+                    <h3 className="font-medium text-slate-900 text-[15px] tracking-tight">Inventory Ledger</h3>
                     <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Live Stock Records</p>
                 </div>
             </div>
@@ -337,7 +335,7 @@ export default function StockSummaryPage() {
                     <AlertTriangle size={14} className="text-rose-500" />
                     <h4 className="text-[11px] font-black text-slate-900 uppercase tracking-widest">Risk Analysis • High Priority</h4>
                 </div>
-                <button className="text-[10px] font-black text-primary hover:underline uppercase tracking-tight flex items-center gap-1 group">
+                <button className="text-[10px] font-medium text-primary hover:underline uppercase tracking-tight flex items-center gap-1 group">
                     View Intelligence Hub <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
                 </button>
             </div>
@@ -364,7 +362,7 @@ export default function StockSummaryPage() {
                                     <AlertTriangle size={20} strokeWidth={2.5} />
                                 </div>
                                 <div>
-                                    <h5 className="text-[15px] font-black text-slate-900 leading-none tracking-tight group-hover:text-primary transition-colors">{item.description}</h5>
+                                    <h5 className="text-[15px] font-medium text-slate-900 leading-none tracking-tight group-hover:text-primary transition-colors">{item.description}</h5>
                                     <div className="flex items-center gap-2 mt-2">
                                         <span className="text-[9px] text-slate-400 font-black uppercase tracking-widest bg-slate-50 px-2 py-0.5 rounded border border-slate-100">{item.storage}</span>
                                         <span className="text-[9px] text-slate-400 font-black uppercase tracking-widest">{item.itemNumber}</span>
@@ -394,8 +392,8 @@ export default function StockSummaryPage() {
 
         <div className="lg:col-span-4 space-y-4">
             <h4 className="text-[11px] font-black text-slate-900 uppercase tracking-widest px-2">Operational Stream</h4>
-            <div className="bg-slate-900 rounded-3xl p-6 shadow-2xl relative overflow-hidden min-h-[220px] flex flex-col justify-between">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+            <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 relative overflow-hidden min-h-[220px] flex flex-col justify-between">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-2xl"></div>
                 <div className="space-y-6 relative z-10">
                     {[
                         { label: "IB-88235", time: "2h ago", type: "inbound", op: "Admin-A" },
@@ -404,23 +402,26 @@ export default function StockSummaryPage() {
                         <div key={idx} className="flex gap-4 group cursor-pointer">
                             <div className={cn(
                                 "h-10 w-10 rounded-2xl flex items-center justify-center shrink-0 border transition-all group-hover:scale-110",
-                                activity.type === "inbound" ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" : "bg-rose-500/10 border-rose-500/20 text-rose-400"
+                                activity.type === "inbound" ? "bg-emerald-50 border-emerald-100 text-emerald-600" : "bg-rose-50 border-rose-100 text-rose-600"
                             )}>
                                 <Clock size={16} strokeWidth={2.5} />
                             </div>
                             <div className="flex-1 min-w-0 py-0.5">
                                 <div className="flex items-center justify-between gap-2">
-                                    <p className="text-[12px] font-black text-white tracking-tight truncate group-hover:text-primary transition-colors">{activity.type.toUpperCase()}: {activity.label}</p>
-                                    <span className="text-[9px] font-black text-slate-500 whitespace-nowrap">{activity.time}</span>
+                                    <p className="text-[12px] text-slate-900 tracking-tight truncate group-hover:text-primary transition-colors">
+                                        <span className="font-medium">{activity.type.toUpperCase()}</span>
+                                        <span className="font-normal">: {activity.label}</span>
+                                    </p>
+                                    <span className="text-[9px] font-black text-slate-400 whitespace-nowrap">{activity.time}</span>
                                 </div>
-                                <p className="text-[10px] text-slate-400 font-bold mt-1">
-                                    Processed by <span className="text-white underline decoration-slate-700 underline-offset-4">{activity.op}</span>
+                                <p className="text-[10px] text-slate-500 font-bold mt-1">
+                                    Processed by <span className="text-slate-900 underline decoration-slate-300 underline-offset-4">{activity.op}</span>
                                 </p>
                             </div>
                         </div>
                     ))}
                 </div>
-                <button className="w-full mt-6 py-3 rounded-2xl bg-white/5 text-[10px] font-black text-slate-400 hover:bg-white hover:text-slate-900 transition-all border border-white/5 hover:border-white shadow-lg shadow-black/20">
+                <button className="w-full mt-6 py-3 rounded-2xl bg-slate-50 text-[10px] font-black text-slate-500 hover:bg-slate-900 hover:text-white transition-all border border-slate-200 hover:border-slate-900 shadow-sm">
                     VIEW FULL AUDIT LOG
                 </button>
             </div>

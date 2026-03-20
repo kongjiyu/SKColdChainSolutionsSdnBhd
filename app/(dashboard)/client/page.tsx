@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { 
   ArrowUpRight, 
@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const container = {
   hidden: { opacity: 0 },
@@ -30,6 +31,8 @@ const item = {
 };
 
 export default function ClientDashboard() {
+  const [hoveredDirective, setHoveredDirective] = useState<number | null>(null);
+
   return (
     <motion.div 
       variants={container}
@@ -40,7 +43,7 @@ export default function ClientDashboard() {
       {/* Header section with a brutalist/industrial vibe */}
       <motion.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border pb-6">
         <div>
-          <p className="text-sm font-mono text-muted-foreground uppercase tracking-widest mb-1">ST001 - Nestle</p>
+          <p className="text-sm font-sans text-muted-foreground uppercase tracking-widest mb-1">ST001 - Nestle</p>
           <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-foreground">
             COMMAND <span className="text-primary">CENTER</span>
           </h1>
@@ -58,50 +61,50 @@ export default function ClientDashboard() {
         
         {/* Large Metric 1 - Cold Storage */}
         <motion.div variants={item} className="md:col-span-4 h-full">
-            <div className="h-full relative overflow-hidden rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-950/40 to-background p-6 flex flex-col justify-between group">
+            <div className="h-full relative overflow-hidden rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-white p-6 flex flex-col justify-between group shadow-sm">
                 <div className="absolute -right-6 -top-6 opacity-10 group-hover:scale-110 transition-transform duration-500">
                     <ThermometerSnowflake size={160} className="text-blue-500" />
                 </div>
                 <div>
                     <div className="flex items-center gap-2 mb-4">
-                        <div className="p-2 bg-blue-500/20 rounded-lg">
-                            <ThermometerSnowflake className="text-blue-500 h-5 w-5" />
+                        <div className="p-2 bg-blue-100 rounded-lg">
+                            <ThermometerSnowflake className="text-blue-600 h-5 w-5" />
                         </div>
-                        <h3 className="font-bold text-sm uppercase tracking-widest text-blue-500">Cold Storage</h3>
+                        <h3 className="font-bold text-sm uppercase tracking-widest text-blue-600">Cold Storage</h3>
                     </div>
                     <div className="space-y-1">
                         <p className="text-6xl font-black tracking-tighter text-foreground">842</p>
-                        <p className="text-sm font-mono text-muted-foreground">Active Pallets • -18°C</p>
+                        <p className="text-sm font-sans text-muted-foreground">Active Pallets • -18°C</p>
                     </div>
                 </div>
-                <div className="mt-8 pt-4 border-t border-blue-500/20 flex justify-between items-center relative z-10">
-                    <span className="text-xs font-bold text-blue-500/80">92% CAPACITY</span>
-                    <span className="text-xs font-mono text-muted-foreground">+12 this week</span>
+                <div className="mt-8 pt-4 border-t border-blue-100 flex justify-between items-center relative z-10">
+                    <span className="text-xs font-bold text-blue-600">92% CAPACITY</span>
+                    <span className="text-xs font-sans text-muted-foreground">+12 this week</span>
                 </div>
             </div>
         </motion.div>
 
         {/* Large Metric 2 - Ambient Storage */}
         <motion.div variants={item} className="md:col-span-4 h-full">
-            <div className="h-full relative overflow-hidden rounded-2xl border border-orange-500/20 bg-gradient-to-br from-orange-950/40 to-background p-6 flex flex-col justify-between group">
+            <div className="h-full relative overflow-hidden rounded-2xl border border-orange-200 bg-gradient-to-br from-orange-50 to-white p-6 flex flex-col justify-between group shadow-sm">
                 <div className="absolute -right-6 -top-6 opacity-10 group-hover:scale-110 transition-transform duration-500">
                     <Sun size={160} className="text-orange-500" />
                 </div>
                 <div>
                     <div className="flex items-center gap-2 mb-4">
-                        <div className="p-2 bg-orange-500/20 rounded-lg">
-                            <Sun className="text-orange-500 h-5 w-5" />
+                        <div className="p-2 bg-orange-100 rounded-lg">
+                            <Sun className="text-orange-600 h-5 w-5" />
                         </div>
-                        <h3 className="font-bold text-sm uppercase tracking-widest text-orange-500">Ambient Storage</h3>
+                        <h3 className="font-bold text-sm uppercase tracking-widest text-orange-600">Ambient Storage</h3>
                     </div>
                     <div className="space-y-1">
                         <p className="text-6xl font-black tracking-tighter text-foreground">320</p>
-                        <p className="text-sm font-mono text-muted-foreground">Active Pallets • 24°C</p>
+                        <p className="text-sm font-sans text-muted-foreground">Active Pallets • 24°C</p>
                     </div>
                 </div>
-                <div className="mt-8 pt-4 border-t border-orange-500/20 flex justify-between items-center relative z-10">
-                    <span className="text-xs font-bold text-orange-500/80">45% CAPACITY</span>
-                    <span className="text-xs font-mono text-muted-foreground">-5 this week</span>
+                <div className="mt-8 pt-4 border-t border-orange-100 flex justify-between items-center relative z-10">
+                    <span className="text-xs font-bold text-orange-600">45% CAPACITY</span>
+                    <span className="text-xs font-sans text-muted-foreground">-5 this week</span>
                 </div>
             </div>
         </motion.div>
@@ -146,7 +149,7 @@ export default function ClientDashboard() {
                             <Activity className="h-4 w-4 text-primary" />
                             Recent Operations Ledger
                         </CardTitle>
-                        <Button variant="ghost" size="sm" className="h-8 text-xs font-mono">View All</Button>
+                        <Button variant="ghost" size="sm" className="h-8 text-xs font-sans">View All</Button>
                     </div>
                 </CardHeader>
                 <CardContent className="p-0">
@@ -168,11 +171,16 @@ export default function ClientDashboard() {
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-secondary text-secondary-foreground mb-1">
+                                    <span className={cn(
+                                        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border mb-1",
+                                        log.status === "Processing" 
+                                            ? "bg-amber-100 text-amber-700 border-amber-200" 
+                                            : "bg-emerald-100 text-emerald-700 border-emerald-200"
+                                    )}>
                                         {log.status === "Processing" ? <Clock className="h-3 w-3" /> : null}
                                         {log.status}
                                     </span>
-                                    <p className="text-xs font-mono text-muted-foreground">{log.time}</p>
+                                    <p className="text-xs font-sans text-muted-foreground block">{log.time}</p>
                                 </div>
                             </div>
                         ))}
@@ -192,16 +200,43 @@ export default function ClientDashboard() {
                         Quick Directives
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="p-6 space-y-3 relative z-10">
-                    <Button variant="secondary" className="w-full justify-between h-12 font-bold hover:translate-x-1 transition-transform">
+                <CardContent className="p-6 space-y-3 relative z-10" onMouseLeave={() => setHoveredDirective(null)}>
+                    <Button 
+                        variant="outline" 
+                        onMouseEnter={() => setHoveredDirective(0)}
+                        className={cn(
+                            "w-full justify-between h-12 font-bold hover:translate-x-1 transition-all border",
+                            hoveredDirective === null || hoveredDirective === 0
+                                ? "bg-white text-slate-900 border-transparent"
+                                : "bg-transparent text-primary-foreground border-primary-foreground/20 hover:bg-white hover:text-slate-900"
+                        )}
+                    >
                         New Withdrawal
                         <ArrowUpRight className="h-4 w-4 opacity-50" />
                     </Button>
-                    <Button variant="outline" className="w-full justify-between h-12 font-bold bg-transparent border-primary-foreground/20 hover:bg-primary-foreground/10 text-primary-foreground hover:translate-x-1 transition-transform">
+                    <Button 
+                        variant="outline" 
+                        onMouseEnter={() => setHoveredDirective(1)}
+                        className={cn(
+                            "w-full justify-between h-12 font-bold transition-all border",
+                            hoveredDirective === 1
+                                ? "bg-white text-slate-900 border-transparent translate-x-1"
+                                : "bg-transparent text-primary-foreground border-primary-foreground/20"
+                        )}
+                    >
                         Schedule Inbound
                         <ArrowDownRight className="h-4 w-4 opacity-50" />
                     </Button>
-                    <Button variant="outline" className="w-full justify-between h-12 font-bold bg-transparent border-primary-foreground/20 hover:bg-primary-foreground/10 text-primary-foreground hover:translate-x-1 transition-transform">
+                    <Button 
+                        variant="outline" 
+                        onMouseEnter={() => setHoveredDirective(2)}
+                        className={cn(
+                            "w-full justify-between h-12 font-bold transition-all border",
+                            hoveredDirective === 2
+                                ? "bg-white text-slate-900 border-transparent translate-x-1"
+                                : "bg-transparent text-primary-foreground border-primary-foreground/20"
+                        )}
+                    >
                         View Stock Summary
                         <Box className="h-4 w-4 opacity-50" />
                     </Button>

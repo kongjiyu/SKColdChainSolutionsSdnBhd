@@ -170,75 +170,101 @@ export default function WithdrawRequestPage() {
           </div>
 
           <div className="space-y-4">
-            {fields.map((field, index) => (
-              <motion.div
-                key={field.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="relative group p-6 bg-card border border-border rounded-xl shadow-sm hover:border-primary/20 transition-all"
-              >
-                <button
-                  type="button"
-                  onClick={() => remove(index)}
-                  className="absolute -top-2 -right-2 h-8 w-8 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="space-y-2">
-                    <Label>Item / Batch Selection</Label>
-                    <select
-                      className="w-full h-9 rounded-md border border-input bg-transparent px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-                      {...register(`items.${index}.itemId` as const)}
+            {fields.length === 0 ? (
+                <div className="flex flex-col items-center justify-center p-12 text-center bg-slate-50 border border-slate-200 border-dashed rounded-xl">
+                    <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+                        <Package className="h-6 w-6 text-slate-400" />
+                    </div>
+                    <h4 className="text-sm font-bold text-slate-900 mb-1">No Items Added</h4>
+                    <p className="text-xs text-slate-500 max-w-sm mb-4">
+                        You have not added any items to this withdrawal request yet. Click the "Add Item" button above to get started.
+                    </p>
+                    <Button 
+                      type="button" 
+                      onClick={() => append({ 
+                        itemId: "", 
+                        quantity: 1, 
+                        deliveryDate: globalDate || "", 
+                        containerNo: "CNTR-MOCK", 
+                        expiryDate: "N/A", 
+                        inboundDoc: "N/A" 
+                      })}
+                      className="gap-2"
                     >
-                      <option value="">Select Item...</option>
-                      <option value="ITEM-9921">Nestle Milo 1kg (Batch A)</option>
-                      <option value="ITEM-4421">Maggi Curry (Batch B)</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Quantity</Label>
-                    <Input 
-                      type="number" 
-                      placeholder="0"
-                      {...register(`items.${index}.quantity` as const, { valueAsNumber: true })}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Delivery Date</Label>
-                    <Input 
-                      type="date" 
-                      disabled={isUnified}
-                      {...register(`items.${index}.deliveryDate` as const)}
-                    />
-                  </div>
+                      <Plus className="h-4 w-4" /> Add First Item
+                    </Button>
                 </div>
+            ) : (
+                fields.map((field, index) => (
+                  <motion.div
+                    key={field.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="relative group p-6 bg-card border border-border rounded-xl shadow-sm hover:border-primary/20 transition-all"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => remove(index)}
+                      className="absolute -top-2 -right-2 h-8 w-8 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
 
-                {/* Read-only Metadata Grid */}
-                <div className="mt-6 pt-6 border-t border-border grid grid-cols-2 md:grid-cols-3 gap-4">
-                  <div className="flex flex-col">
-                    <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">Container Number</span>
-                    <span className="text-sm font-medium">{watch(`items.${index}.containerNo`)}</span>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">Inbound Doc #</span>
-                    <span className="text-sm font-medium">{watch(`items.${index}.inboundDoc`)}</span>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">Expiry Date</span>
-                    <span className={cn(
-                      "text-sm font-bold",
-                      watch(`items.${index}.expiryDate`).includes("2025") ? "text-destructive" : "text-emerald-600"
-                    )}>
-                      {watch(`items.${index}.expiryDate`)}
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="space-y-2">
+                        <Label>Item / Batch Selection</Label>
+                        <select
+                          className="w-full h-9 rounded-md border border-input bg-transparent px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
+                          {...register(`items.${index}.itemId` as const)}
+                        >
+                          <option value="">Select Item...</option>
+                          <option value="ITEM-9921">Nestle Milo 1kg (Batch A)</option>
+                          <option value="ITEM-4421">Maggi Curry (Batch B)</option>
+                        </select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Quantity</Label>
+                        <Input 
+                          type="number" 
+                          placeholder="0"
+                          {...register(`items.${index}.quantity` as const, { valueAsNumber: true })}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Delivery Date</Label>
+                        <Input 
+                          type="date" 
+                          disabled={isUnified}
+                          {...register(`items.${index}.deliveryDate` as const)}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Read-only Metadata Grid */}
+                    <div className="mt-6 pt-6 border-t border-border grid grid-cols-2 md:grid-cols-3 gap-4">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">Container Number</span>
+                        <span className="text-sm font-medium">{watch(`items.${index}.containerNo`)}</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">Inbound Doc #</span>
+                        <span className="text-sm font-medium">{watch(`items.${index}.inboundDoc`)}</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">Expiry Date</span>
+                        <span className={cn(
+                          "text-sm font-bold",
+                          watch(`items.${index}.expiryDate`).includes("2025") ? "text-destructive" : "text-emerald-600"
+                        )}>
+                          {watch(`items.${index}.expiryDate`)}
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))
+            )}
           </div>
         </div>
 
