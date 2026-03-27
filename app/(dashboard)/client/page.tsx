@@ -44,7 +44,7 @@ export default function ClientDashboard() {
       <motion.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border pb-6">
         <div>
           <p className="text-sm font-sans text-muted-foreground uppercase tracking-widest mb-1">ST001 - Nestle</p>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-foreground">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-foreground">
             COMMAND <span className="text-primary">CENTER</span>
           </h1>
         </div>
@@ -59,8 +59,28 @@ export default function ClientDashboard() {
       {/* Main Grid - Asymmetric Layout */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
         
+        {/* Compact mobile storage stats */}
+        <motion.div variants={item} className="md:hidden grid grid-cols-2 gap-3">
+            <div className="rounded-xl border border-blue-200 bg-blue-50/40 px-3 py-2">
+                <div className="flex items-center gap-1.5">
+                    <ThermometerSnowflake className="h-3.5 w-3.5 text-blue-600" />
+                    <p className="text-[9px] font-black text-blue-600 uppercase tracking-widest">Cold Storage</p>
+                </div>
+                <p className="text-xl font-black text-slate-900 mt-1 leading-none">842</p>
+                <p className="text-[10px] text-slate-500 mt-1">-18C • 92%</p>
+            </div>
+            <div className="rounded-xl border border-orange-200 bg-orange-50/40 px-3 py-2">
+                <div className="flex items-center gap-1.5">
+                    <Sun className="h-3.5 w-3.5 text-orange-600" />
+                    <p className="text-[9px] font-black text-orange-600 uppercase tracking-widest">Ambient</p>
+                </div>
+                <p className="text-xl font-black text-slate-900 mt-1 leading-none">320</p>
+                <p className="text-[10px] text-slate-500 mt-1">24C • 45%</p>
+            </div>
+        </motion.div>
+
         {/* Large Metric 1 - Cold Storage */}
-        <motion.div variants={item} className="md:col-span-4 h-full">
+        <motion.div variants={item} className="hidden md:block md:col-span-4 h-full">
             <div className="h-full relative overflow-hidden rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-white p-6 flex flex-col justify-between group shadow-sm">
                 <div className="absolute -right-6 -top-6 opacity-10 group-hover:scale-110 transition-transform duration-500">
                     <ThermometerSnowflake size={160} className="text-blue-500" />
@@ -73,7 +93,7 @@ export default function ClientDashboard() {
                         <h3 className="font-bold text-sm uppercase tracking-widest text-blue-600">Cold Storage</h3>
                     </div>
                     <div className="space-y-1">
-                        <p className="text-6xl font-black tracking-tighter text-foreground">842</p>
+                        <p className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter text-foreground">842</p>
                         <p className="text-sm font-sans text-muted-foreground">Active Pallets • -18°C</p>
                     </div>
                 </div>
@@ -85,7 +105,7 @@ export default function ClientDashboard() {
         </motion.div>
 
         {/* Large Metric 2 - Ambient Storage */}
-        <motion.div variants={item} className="md:col-span-4 h-full">
+        <motion.div variants={item} className="hidden md:block md:col-span-4 h-full">
             <div className="h-full relative overflow-hidden rounded-2xl border border-orange-200 bg-gradient-to-br from-orange-50 to-white p-6 flex flex-col justify-between group shadow-sm">
                 <div className="absolute -right-6 -top-6 opacity-10 group-hover:scale-110 transition-transform duration-500">
                     <Sun size={160} className="text-orange-500" />
@@ -98,7 +118,7 @@ export default function ClientDashboard() {
                         <h3 className="font-bold text-sm uppercase tracking-widest text-orange-600">Ambient Storage</h3>
                     </div>
                     <div className="space-y-1">
-                        <p className="text-6xl font-black tracking-tighter text-foreground">320</p>
+                        <p className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter text-foreground">320</p>
                         <p className="text-sm font-sans text-muted-foreground">Active Pallets • 24°C</p>
                     </div>
                 </div>
@@ -110,31 +130,40 @@ export default function ClientDashboard() {
         </motion.div>
 
         {/* Quick Stats Stack */}
-        <motion.div variants={item} className="md:col-span-4 flex flex-col gap-6">
-            <div className="flex-1 rounded-2xl border border-border bg-card p-5 flex items-center justify-between group hover:border-primary/50 transition-colors">
+        <motion.div variants={item} className="md:col-span-4 grid grid-cols-2 md:grid-cols-1 gap-3 md:gap-6">
+            <div className="rounded-xl md:rounded-2xl border border-border bg-card p-3 md:p-5 flex items-center justify-between group hover:border-primary/50 transition-colors">
                 <div>
-                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Inbound Today</p>
-                    <p className="text-3xl font-black text-foreground">24</p>
+                    <p className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Inbound</p>
+                    <p className="text-xl md:text-3xl font-black text-foreground leading-none">24</p>
                 </div>
-                <div className="h-12 w-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform">
+                <div className="md:hidden h-7 w-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                    <ArrowDownRight size={14} />
+                </div>
+                <div className="hidden md:flex h-12 w-12 rounded-full bg-emerald-500/10 items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform">
                     <ArrowDownRight size={24} />
                 </div>
             </div>
-            <div className="flex-1 rounded-2xl border border-border bg-card p-5 flex items-center justify-between group hover:border-primary/50 transition-colors">
+            <div className="rounded-xl md:rounded-2xl border border-border bg-card p-3 md:p-5 flex items-center justify-between group hover:border-primary/50 transition-colors">
                 <div>
-                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Outbound Today</p>
-                    <p className="text-3xl font-black text-foreground">18</p>
+                    <p className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Outbound</p>
+                    <p className="text-xl md:text-3xl font-black text-foreground leading-none">18</p>
                 </div>
-                <div className="h-12 w-12 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
+                <div className="md:hidden h-7 w-7 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500">
+                    <ArrowUpRight size={14} />
+                </div>
+                <div className="hidden md:flex h-12 w-12 rounded-full bg-blue-500/10 items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
                     <ArrowUpRight size={24} />
                 </div>
             </div>
-            <div className="flex-1 rounded-2xl border border-destructive/20 bg-destructive/5 p-5 flex items-center justify-between group">
+            <div className="col-span-2 md:col-span-1 rounded-xl md:rounded-2xl border border-destructive/20 bg-destructive/5 p-3 md:p-5 flex items-center justify-between group">
                 <div>
-                    <p className="text-[10px] font-bold text-destructive uppercase tracking-widest mb-1">Pending Alerts</p>
-                    <p className="text-3xl font-black text-destructive">2</p>
+                    <p className="text-[9px] md:text-[10px] font-bold text-destructive uppercase tracking-widest mb-1">Pending Alerts</p>
+                    <p className="text-xl md:text-3xl font-black text-destructive leading-none">2</p>
                 </div>
-                <div className="h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center text-destructive group-hover:rotate-12 transition-transform">
+                <div className="md:hidden h-7 w-7 rounded-lg bg-destructive/10 flex items-center justify-center text-destructive">
+                    <AlertTriangle size={14} />
+                </div>
+                <div className="hidden md:flex h-12 w-12 rounded-full bg-destructive/10 items-center justify-center text-destructive group-hover:rotate-12 transition-transform">
                     <AlertTriangle size={24} />
                 </div>
             </div>
@@ -145,7 +174,7 @@ export default function ClientDashboard() {
             <Card className="h-full border-border shadow-sm">
                 <CardHeader className="border-b border-border bg-muted/20 pb-4">
                     <div className="flex items-center justify-between">
-                        <CardTitle className="text-sm font-bold uppercase tracking-widest flex items-center gap-2">
+                        <CardTitle className="text-[11px] sm:text-sm font-bold uppercase tracking-widest flex items-center gap-2">
                             <Activity className="h-4 w-4 text-primary" />
                             Recent Operations Ledger
                         </CardTitle>
@@ -160,17 +189,17 @@ export default function ClientDashboard() {
                             { id: "WR-9920", type: "Withdrawal", items: 1, status: "Completed", time: "1 day ago", icon: ArrowUpRight, color: "text-blue-500", bg: "bg-blue-500/10" },
                             { id: "MV-1029", type: "Relocation", items: 2, status: "Completed", time: "2 days ago", icon: Package, color: "text-orange-500", bg: "bg-orange-500/10" },
                         ].map((log, i) => (
-                            <div key={i} className="p-4 flex items-center justify-between hover:bg-muted/30 transition-colors group cursor-pointer">
-                                <div className="flex items-center gap-4">
+                            <div key={i} className="p-4 flex items-center justify-between gap-3 hover:bg-muted/30 transition-colors group cursor-pointer">
+                                <div className="flex items-center gap-4 min-w-0">
                                     <div className={`h-10 w-10 rounded-lg ${log.bg} flex items-center justify-center ${log.color}`}>
                                         <log.icon size={18} />
                                     </div>
-                                    <div>
+                                    <div className="min-w-0">
                                         <p className="font-bold text-sm">{log.id}</p>
-                                        <p className="text-xs text-muted-foreground">{log.type} • {log.items} Pallet{log.items > 1 ? 's' : ''}</p>
+                                        <p className="text-xs text-muted-foreground truncate">{log.type} • {log.items} Pallet{log.items > 1 ? 's' : ''}</p>
                                     </div>
                                 </div>
-                                <div className="text-right">
+                                <div className="text-right shrink-0">
                                     <span className={cn(
                                         "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border mb-1",
                                         log.status === "Processing" 

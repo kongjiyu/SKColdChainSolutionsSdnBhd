@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion } from "framer-motion";
@@ -18,6 +18,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 const withdrawSchema = z.object({
@@ -109,47 +116,50 @@ export default function WithdrawRequestPage() {
         </div>
 
         {/* Unified Date Selection */}
-        <div className="flex items-center justify-between p-4 bg-primary/5 border border-primary/10 rounded-xl">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Calendar className="h-5 w-5 text-primary" />
+        <div className="p-4 bg-primary/5 border border-primary/10 rounded-xl space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Calendar className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold">Unified Delivery Date</p>
+                <p className="text-xs text-muted-foreground">Apply one date to all items in this request.</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-semibold">Unified Delivery Date</p>
-              <p className="text-xs text-muted-foreground">Apply one date to all items in this request.</p>
-            </div>
+            <label htmlFor="unifiedDeliveryDate" className="flex items-center gap-2 shrink-0 cursor-pointer">
+              <input
+                type="checkbox"
+                id="unifiedDeliveryDate"
+                className="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary"
+                {...register("unifiedDeliveryDate")}
+              />
+            </label>
           </div>
-          <div className="flex items-center gap-4">
-            <input 
-              type="checkbox" 
-              id="unifiedDeliveryDate"
-              className="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary"
-              {...register("unifiedDeliveryDate")}
-            />
-            {isUnified && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-              >
-                <Input 
-                  type="date" 
-                  className="w-40" 
-                  {...register("globalDeliveryDate")}
-                  onChange={(e) => {
-                    const date = e.target.value;
-                    setValue("globalDeliveryDate", date);
-                    // Update all items if unified
-                    fields.forEach((_, index) => setValue(`items.${index}.deliveryDate`, date));
-                  }}
-                />
-              </motion.div>
-            )}
-          </div>
+
+          {isUnified && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="pl-0 sm:pl-13"
+            >
+              <Input
+                type="date"
+                className="w-full sm:w-52"
+                {...register("globalDeliveryDate")}
+                onChange={(e) => {
+                  const date = e.target.value;
+                  setValue("globalDeliveryDate", date);
+                  fields.forEach((_, index) => setValue(`items.${index}.deliveryDate`, date));
+                }}
+              />
+            </motion.div>
+          )}
         </div>
 
         {/* Items List */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Items to Withdraw</h3>
             <Button 
               type="button" 
@@ -213,14 +223,28 @@ export default function WithdrawRequestPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div className="space-y-2">
                         <Label>Item / Batch Selection</Label>
-                        <select
-                          className="w-full h-9 rounded-md border border-input bg-transparent px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-                          {...register(`items.${index}.itemId` as const)}
-                        >
-                          <option value="">Select Item...</option>
-                          <option value="ITEM-9921">Nestle Milo 1kg (Batch A)</option>
-                          <option value="ITEM-4421">Maggi Curry (Batch B)</option>
-                        </select>
+                        <Controller
+                          control={control}
+                          name={`items.${index}.itemId` as const}
+                          render={({ field }) => (
+                            <Select value={field.value} onValueChange={field.onChange}>
+                              <SelectTrigger className="h-10 px-4 bg-white border border-slate-200 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-50 transition-all flex items-center gap-2 shadow-sm w-full">
+                                <SelectValue placeholder="Select Item..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="ITEM-9921" className="text-sm font-medium cursor-pointer">
+                                  Nestle Milo 1kg (Batch A)
+                                </SelectItem>
+                                <SelectItem value="ITEM-4421" className="text-sm font-medium cursor-pointer">
+                                  Maggi Curry (Batch B)
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        {errors.items?.[index]?.itemId && (
+                          <p className="text-xs text-destructive">{errors.items[index]?.itemId?.message}</p>
+                        )}
                       </div>
 
                       <div className="space-y-2">
@@ -269,7 +293,7 @@ export default function WithdrawRequestPage() {
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-4 pt-4 border-t border-border">
+        <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 sm:gap-4 pt-4 border-t border-border">
           <Button type="button" variant="ghost">Cancel</Button>
           <Button type="submit" className="gap-2 px-8">
             Submit Request <ArrowRight className="h-4 w-4" />

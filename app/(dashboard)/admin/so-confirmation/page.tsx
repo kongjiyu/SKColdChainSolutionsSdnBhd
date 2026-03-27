@@ -9,7 +9,6 @@ import {
   RefreshCcw, 
   ExternalLink,
   Lock,
-  Users,
   Send,
   Loader2
 } from "lucide-react";
@@ -138,10 +137,7 @@ export default function SOConfirmationPage() {
             exit={{ height: 0, opacity: 0 }}
             className="bg-destructive/10 border border-destructive/20 rounded-xl overflow-hidden"
           >
-            <div className="p-4 flex items-start gap-4">
-              <div className="h-10 w-10 rounded-full bg-destructive/20 flex items-center justify-center shrink-0">
-                <Users className="h-5 w-5 text-destructive animate-pulse" />
-              </div>
+            <div className="p-4">
               <div className="flex-1">
                 <h3 className="text-sm font-bold text-destructive flex items-center gap-2">
                   <Lock size={14} /> MULTI-ADMIN SESSION DETECTED
@@ -150,27 +146,34 @@ export default function SOConfirmationPage() {
                   Admin <span className="font-bold">Ahmad (ID: AD02)</span> is currently viewing this page. 
                   To prevent data clashes in SAP, please coordinate before pushing orders.
                 </p>
+                <div className="mt-3 flex justify-end">
+                  <button 
+                    onClick={() => setShowMultiAdminAlert(false)}
+                    className="text-destructive/50 hover:text-destructive transition-colors flex items-center gap-1 text-xs font-semibold"
+                  >
+                    <RefreshCcw size={14} /> Refresh
+                  </button>
+                </div>
               </div>
-              <button 
-                onClick={() => setShowMultiAdminAlert(false)}
-                className="text-destructive/50 hover:text-destructive transition-colors"
-              >
-                <RefreshCcw size={16} />
-              </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">SO Confirmation</h2>
-          <p className="text-muted-foreground text-sm">
-            Review and push withdrawal requests into SAP ERP system.
-          </p>
+      <div className="space-y-3">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h2 className="text-2xl font-bold tracking-tight">SO Confirmation</h2>
+            <p className="text-muted-foreground text-sm">
+              Review and push withdrawal requests into SAP ERP system.
+            </p>
+          </div>
+          <Button variant="outline" className="gap-2 shrink-0">
+              <RefreshCcw size={14} /> Refresh
+          </Button>
         </div>
-        
-        <div className="flex items-center gap-3">
+
+        <div className="flex items-center justify-end gap-3">
             <AnimatePresence>
                 {selectedOrders.length > 0 && (
                     <motion.div
@@ -194,13 +197,10 @@ export default function SOConfirmationPage() {
                     </motion.div>
                 )}
             </AnimatePresence>
-            <Button variant="outline" className="gap-2">
-                <RefreshCcw size={14} /> Refresh
-            </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         <StatsCard label="Pending Orders" value="42" color="text-amber-600" />
         <StatsCard label="Last SAP Sync" value="2m ago" color="text-primary" />
         <StatsCard label="Active Admins" value="2" color="text-destructive" />
@@ -228,9 +228,9 @@ export default function SOConfirmationPage() {
 
 function StatsCard({ label, value, color }: { label: string, value: string, color: string }) {
   return (
-    <div className="p-4 bg-card border border-border rounded-xl shadow-sm">
-        <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-1">{label}</p>
-        <p className={cn("text-2xl font-black", color)}>{value}</p>
+    <div className="p-3 sm:p-4 bg-card border border-border rounded-xl shadow-sm">
+        <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-1">{label}</p>
+        <p className={cn("text-xl sm:text-2xl font-black leading-none", color)}>{value}</p>
     </div>
   );
 }

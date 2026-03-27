@@ -126,7 +126,7 @@ export default function UserManagementPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">User Management</h2>
           <p className="text-muted-foreground text-sm">
@@ -174,10 +174,12 @@ export default function UserManagementPage() {
         </Dialog>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
         <StatsCard icon={Building2} label="Total Accounts" value="128" />
         <StatsCard icon={ShieldCheck} label="Active Sessions" value="24" />
-        <StatsCard icon={Key} label="Password Resets (24h)" value="5" />
+        <div className="col-span-2 md:col-span-1">
+          <StatsCard icon={Key} label="Password Resets (24h)" value="5" />
+        </div>
       </div>
 
       <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
@@ -227,13 +229,13 @@ export default function UserManagementPage() {
 
 function StatsCard({ icon: Icon, label, value }: { icon: any, label: string, value: string }) {
   return (
-    <div className="p-4 bg-card border border-border rounded-xl shadow-sm flex items-center gap-4">
-      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-        <Icon size={20} />
+    <div className="p-3 sm:p-4 bg-card border border-border rounded-xl shadow-sm flex items-center gap-3 sm:gap-4">
+      <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+        <Icon size={16} className="sm:h-5 sm:w-5" />
       </div>
       <div>
-        <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{label}</p>
-        <p className="text-xl font-bold">{value}</p>
+        <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{label}</p>
+        <p className="text-lg sm:text-xl font-bold leading-none">{value}</p>
       </div>
     </div>
   );

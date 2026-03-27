@@ -33,6 +33,14 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface StockSummary {
   storer: string;
@@ -84,6 +92,7 @@ const mockAllData: StockSummary[] = [
 
 export default function AdminStockSummaryPage() {
   const [selectedCustomer, setSelectedCustomer] = useState<string>("all");
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
 
   const filteredData = selectedCustomer === "all" 
     ? mockAllData 
@@ -208,13 +217,13 @@ export default function AdminStockSummaryPage() {
         className="space-y-6 pb-12"
     >
       {/* HUD-Style Hero Section (Light Theme) */}
-      <section className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full -mr-64 -mt-64 blur-3xl pointer-events-none group-hover:bg-primary/10 transition-all duration-1000"></div>
+      <section className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm relative overflow-hidden group">
+        <div className="absolute top-0 right-0 hidden md:block w-[500px] h-[500px] bg-primary/5 rounded-full -mr-64 -mt-64 blur-3xl pointer-events-none group-hover:bg-primary/10 transition-all duration-1000"></div>
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-emerald-500/5 rounded-full -ml-16 -mb-16 blur-3xl pointer-events-none"></div>
         
         <div className="relative flex flex-col lg:flex-row lg:items-end justify-between gap-8">
             <div className="space-y-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-50 border border-slate-200 rounded-full">
+            <div className="hidden md:inline-flex items-center gap-2 px-3 py-1 bg-slate-50 border border-slate-200 rounded-full">
                     <span className="relative flex h-2 w-2">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -223,8 +232,8 @@ export default function AdminStockSummaryPage() {
                 </div>
                 
                 <div>
-                    <h2 className="text-4xl font-black tracking-tighter text-slate-900 leading-[0.9]">MASTER STOCK <span className="text-primary italic">LEDGER</span></h2>
-                    <div className="flex items-center gap-4 mt-3">
+                  <h2 className="text-3xl sm:text-4xl font-black tracking-tighter text-slate-900 leading-tight">MASTER STOCK <span className="text-primary italic">LEDGER</span></h2>
+              <div className="hidden md:flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mt-3">
                         <div className="flex items-center gap-1.5">
                             <Globe size={14} className="text-slate-400" />
                             <p className="text-slate-500 text-[11px] font-black uppercase tracking-widest">Network-wide Visibility</p>
@@ -238,7 +247,26 @@ export default function AdminStockSummaryPage() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 min-w-fit lg:pb-1">
+                <div className="grid grid-cols-2 gap-3 md:hidden w-full">
+                  <div className="rounded-2xl border border-slate-200 bg-white px-3 py-2">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">ACCOUNTS</p>
+                    <p className="text-base font-black text-slate-900 mt-1 leading-none">12</p>
+                  </div>
+                  <div className="rounded-2xl border border-slate-200 bg-white px-3 py-2">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">LOAD</p>
+                    <p className="text-base font-black text-slate-900 mt-1 leading-none">84%</p>
+                  </div>
+                  <div className="rounded-2xl border border-slate-200 bg-white px-3 py-2">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">PALLETS</p>
+                    <p className="text-base font-black text-slate-900 mt-1 leading-none">2,840</p>
+                  </div>
+                  <div className="rounded-2xl border border-slate-200 bg-primary/5 px-3 py-2">
+                    <p className="text-[9px] font-black text-primary/70 uppercase tracking-widest leading-none">ITEMS</p>
+                    <p className="text-base font-black text-primary mt-1 leading-none">142k</p>
+                  </div>
+                </div>
+
+                <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-3 min-w-fit lg:pb-1">
                 <HUDCard icon={Building2} label="ACCOUNTS" value="12" />
                 <HUDCard icon={Warehouse} label="LOAD" value="84%" trend="+2.4%" />
                 <HUDCard icon={Layers} label="PALLETS" value="2,840" />
@@ -247,8 +275,9 @@ export default function AdminStockSummaryPage() {
         </div>
       </section>
 
-      <div className="flex flex-wrap items-center justify-end gap-4 px-1">
-        <div className="flex items-center gap-3">
+              <div className="px-1 space-y-3 md:space-y-0">
+              <div className="hidden md:flex flex-wrap items-center justify-end gap-4">
+                <div className="flex flex-wrap items-center gap-3">
             <Select value={selectedCustomer} onValueChange={setSelectedCustomer}>
                 <SelectTrigger className="h-10 px-5 bg-white border border-slate-200 rounded-2xl text-[11px] font-black text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2 group shadow-sm w-[200px]">
                     <SelectValue placeholder="Select Account" />
@@ -270,17 +299,117 @@ export default function AdminStockSummaryPage() {
                 <Filter size={14} className="text-slate-400 group-hover:text-primary transition-colors" />
                 ADVANCED FILTERS
             </button>
-            <button className="h-10 px-5 bg-slate-900 text-white rounded-2xl text-[11px] font-black hover:bg-slate-800 transition-all flex items-center gap-2 shadow-xl shadow-slate-900/10 active:scale-95">
-                <Download size={14} strokeWidth={3} />
-                EXPORT LEDGER
+            <Dialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen}>
+              <DialogTrigger asChild>
+                <button className="h-10 px-5 bg-slate-900 text-white rounded-2xl text-[11px] font-black hover:bg-slate-800 transition-all flex items-center gap-2 shadow-xl shadow-slate-900/10 active:scale-95">
+                    <Download size={14} strokeWidth={3} />
+                    EXPORT LEDGER
+                </button>
+              </DialogTrigger>
+              <DialogContent className="max-w-sm">
+                <DialogHeader>
+                  <DialogTitle>Export master stock ledger</DialogTitle>
+                  <DialogDescription>
+                    Choose a format to download the current inventory status.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="mt-4 flex flex-col gap-3">
+                  <button
+                    onClick={() => {
+                      console.log("Exporting admin stock summary as excel");
+                      setIsExportDialogOpen(false);
+                    }}
+                    className="h-10 px-4 rounded-xl bg-slate-900 text-white text-[11px] font-black hover:bg-slate-800 transition-colors flex items-center justify-between"
+                  >
+                    <span>Export as Excel (.xlsx)</span>
+                    <Download size={14} className="opacity-80" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      console.log("Exporting admin stock summary as pdf");
+                      setIsExportDialogOpen(false);
+                    }}
+                    className="h-10 px-4 rounded-xl border border-slate-200 bg-white text-[11px] font-black text-slate-700 hover:bg-slate-50 transition-colors flex items-center justify-between"
+                  >
+                    <span>Export as PDF (.pdf)</span>
+                    <Download size={14} className="text-slate-400" />
+                  </button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+
+        <div className="md:hidden space-y-2">
+          <div className="grid grid-cols-2 gap-2">
+            <button className="h-10 px-3 bg-white border border-slate-200 rounded-2xl text-[10px] font-black text-slate-600 hover:bg-slate-50 transition-all flex items-center justify-center gap-2 shadow-sm">
+              <Filter size={13} className="text-slate-400" />
+              ADVANCED FILTERS
             </button>
+            <Dialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen}>
+              <DialogTrigger asChild>
+                <button className="h-10 px-3 bg-slate-900 text-white rounded-2xl text-[10px] font-black hover:bg-slate-800 transition-all flex items-center justify-center gap-2 shadow-xl shadow-slate-900/10 active:scale-95">
+                  <Download size={13} strokeWidth={3} />
+                  EXPORT LEDGER
+                </button>
+              </DialogTrigger>
+              <DialogContent className="max-w-sm">
+                <DialogHeader>
+                  <DialogTitle>Export master stock ledger</DialogTitle>
+                  <DialogDescription>
+                    Choose a format to download the current inventory status.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="mt-4 flex flex-col gap-3">
+                  <button
+                    onClick={() => {
+                      console.log("Exporting admin stock summary as excel");
+                      setIsExportDialogOpen(false);
+                    }}
+                    className="h-10 px-4 rounded-xl bg-slate-900 text-white text-[11px] font-black hover:bg-slate-800 transition-colors flex items-center justify-between"
+                  >
+                    <span>Export as Excel (.xlsx)</span>
+                    <Download size={14} className="opacity-80" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      console.log("Exporting admin stock summary as pdf");
+                      setIsExportDialogOpen(false);
+                    }}
+                    className="h-10 px-4 rounded-xl border border-slate-200 bg-white text-[11px] font-black text-slate-700 hover:bg-slate-50 transition-colors flex items-center justify-between"
+                  >
+                    <span>Export as PDF (.pdf)</span>
+                    <Download size={14} className="text-slate-400" />
+                  </button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          <Select value={selectedCustomer} onValueChange={setSelectedCustomer}>
+            <SelectTrigger className="h-10 w-full px-4 bg-white border border-slate-200 rounded-2xl text-[11px] font-black text-slate-600 hover:bg-slate-50 transition-all shadow-sm">
+              <SelectValue placeholder="Select Account" />
+            </SelectTrigger>
+            <SelectContent>
+              {[
+                { id: "all", label: "All Partner Accounts" },
+                { id: "Nestle", label: "Nestle Malaysia" },
+                { id: "Unilever", label: "Unilever Holdings" },
+                { id: "F&N", label: "F&N Dairies" },
+              ].map((item) => (
+                <SelectItem key={item.id} value={item.id} className="text-[11px] font-medium cursor-pointer">
+                  {item.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
       <div className="space-y-4">
       {/* Elegant Table Section (Updated to match Client style) */}
       <section className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden group">
-        <div className="px-8 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between bg-white gap-4">
+        <div className="px-4 sm:px-8 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between bg-white gap-4">
             <div className="flex items-center gap-4">
                 <div className="h-10 w-10 rounded-2xl bg-slate-50 flex items-center justify-center border border-slate-100 group-hover:scale-110 transition-transform">
                     <Box size={18} className="text-slate-600" />
@@ -289,7 +418,7 @@ export default function AdminStockSummaryPage() {
                     <h3 className="font-medium text-slate-900 text-[15px] tracking-tight">Current Inventory Status</h3>
                     <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Live Stock Records</p>
                 </div>
-                <span className="ml-auto px-2 py-0.5 bg-slate-100 text-slate-400 rounded-full text-[8px] font-black uppercase tracking-widest">{filteredData.length} Records</span>
+                <span className="ml-0 sm:ml-auto px-2 py-0.5 bg-slate-100 text-slate-400 rounded-full text-[8px] font-black uppercase tracking-widest">{filteredData.length} Records</span>
             </div>
             <div className="relative w-full sm:w-72">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300 transition-colors" />

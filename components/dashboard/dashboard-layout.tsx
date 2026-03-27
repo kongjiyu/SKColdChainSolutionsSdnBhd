@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,7 +19,8 @@ import {
   Truck,
   CreditCard,
   Settings,
-  Bell
+  Bell,
+  Menu
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -29,9 +30,10 @@ interface SidebarItemProps {
   href: string;
   active?: boolean;
   collapsed?: boolean;
+  centerContent?: boolean;
 }
 
-const SidebarItem = ({ icon: Icon, label, href, active, collapsed }: SidebarItemProps) => {
+const SidebarItem = ({ icon: Icon, label, href, active, collapsed, centerContent = false }: SidebarItemProps) => {
   return (
     <Link href={href}>
       <motion.div
@@ -41,7 +43,8 @@ const SidebarItem = ({ icon: Icon, label, href, active, collapsed }: SidebarItem
           "flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all duration-300 group relative",
           active 
             ? "bg-primary/10 text-primary shadow-sm ring-1 ring-primary/20" 
-            : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+            : "text-slate-500 hover:bg-slate-100 hover:text-slate-900",
+          centerContent && "justify-center"
         )}
       >
         <Icon className={cn(
@@ -56,7 +59,8 @@ const SidebarItem = ({ icon: Icon, label, href, active, collapsed }: SidebarItem
               exit={{ opacity: 0, x: -8 }}
               className={cn(
                 "text-[13px] whitespace-nowrap transition-all duration-300",
-                active ? "font-bold tracking-tight" : "font-semibold"
+                active ? "font-bold tracking-tight" : "font-semibold",
+                centerContent && "text-lg"
               )}
             >
               {label}
@@ -86,6 +90,7 @@ export default function DashboardLayout({
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   const clientLinks = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/client" },
@@ -109,14 +114,18 @@ export default function DashboardLayout({
     { icon: CreditCard, label: "Billing", href: "#" },
   ];
 
+  useEffect(() => {
+    setIsMobileNavOpen(false);
+  }, [pathname]);
+
   return (
-    <div className="flex h-screen bg-[#F1F5F9] overflow-hidden font-sans antialiased text-slate-900">
-      {/* Sidebar */}
+    <div className="flex h-screen bg-[#F1F5F9] overflow-x-hidden font-sans antialiased text-slate-900">
+      {/* Desktop Sidebar */}
       <motion.aside
         initial={false}
         animate={{ width: collapsed ? 80 : 260 }}
         className={cn(
-          "relative flex flex-col border-r border-slate-200 bg-white z-40 transition-all duration-500 ease-in-out",
+          "relative hidden md:flex flex-col border-r border-slate-200 bg-white z-40 transition-all duration-500 ease-in-out",
           collapsed ? "items-center" : ""
         )}
       >
@@ -187,15 +196,108 @@ export default function DashboardLayout({
         </button>
       </motion.aside>
 
+      {/* Mobile Sidebar Drawer */}
+      <AnimatePresence>
+        {isMobileNavOpen && (
+          <>
+            <motion.div
+              className="fixed inset-0 bg-black/40 z-40 md:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileNavOpen(false)}
+            />
+            <motion.aside
+              className="fixed inset-y-0 left-0 z-50 w-full bg-white border-r border-slate-200 md:hidden flex flex-col"
+              initial={{ x: "-100%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "-100%", opacity: 0 }}
+              transition={{ type: "spring", stiffness: 260, damping: 25 }}
+            >
+              <div className="p-5 flex items-center justify-between border-b border-slate-100">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
+                    <Box className="h-5.5 w-5.5 text-primary-foreground" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-black text-lg tracking-tight leading-tight text-slate-900">SK COLD CHAIN</span>
+                    <span className="text-[10px] text-slate-400 font-black uppercase tracking-[0.1em]">Logistics Solutions</span>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setIsMobileNavOpen(false)}
+                  className="h-10 w-10 flex items-center justify-center rounded-xl bg-slate-50 text-slate-500 active:bg-slate-100 transition-colors"
+                >
+                  <LogOut className="h-5 w-5 rotate-180" />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto px-5 space-y-8 py-6 scrollbar-hide">
+                <div className="space-y-2">
+                  <SidebarHeader label="Operations" collapsed={false} centered />
+                  {clientLinks.map((link) => (
+                    <SidebarItem
+                      key={link.href}
+                      {...link}
+                      active={pathname === link.href}
+                      collapsed={false}
+                      centerContent
+                    />
+                  ))}
+                </div>
+
+                <div className="space-y-2">
+                  <SidebarHeader label="Management" collapsed={false} centered />
+                  {adminLinks.map((link) => (
+                    <SidebarItem
+                      key={link.href}
+                      {...link}
+                      active={pathname === link.href}
+                      collapsed={false}
+                      centerContent
+                    />
+                  ))}
+                </div>
+
+                <div className="space-y-2 opacity-50 pb-8">
+                  <SidebarHeader label="Extensions" collapsed={false} centered />
+                  {futureLinks.map((link) => (
+                    <div key={link.label} className="opacity-40 grayscale pointer-events-none">
+                      <SidebarItem
+                        {...link}
+                        active={false}
+                        collapsed={false}
+                        centerContent
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-5 border-t border-slate-100 bg-slate-50/50 pb-8">
+                <SidebarItem icon={LogOut} label="Sign Out" href="/login" collapsed={false} centerContent />
+              </div>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Header */}
-        <header className="h-16 border-b border-slate-200 bg-white/90 backdrop-blur-md flex items-center justify-between px-8 shrink-0 z-30">
-          <div className="flex items-center gap-4">
-            <div className="hidden lg:flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+        <header className="sticky top-0 h-16 border-b border-slate-200 bg-white/90 backdrop-blur-md flex items-center justify-between px-4 sm:px-6 md:px-8 shrink-0 z-30">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              className="md:hidden h-9 w-9 rounded-lg flex items-center justify-center border border-slate-200 bg-white text-slate-500 hover:text-primary hover:bg-slate-50 transition-all shadow-sm"
+              onClick={() => setIsMobileNavOpen(true)}
+            >
+              <Menu size={18} />
+            </button>
+            <div className="hidden sm:flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest max-w-[180px] truncate">
               <span>Main</span>
               <span className="text-slate-300 font-light">/</span>
-              <span className="text-slate-900 font-black">{pathname.split('/').pop()?.replace('-', ' ')}</span>
+              <span className="text-slate-900 font-black truncate">{pathname.split('/').pop()?.replace('-', ' ')}</span>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -223,8 +325,8 @@ export default function DashboardLayout({
           </div>
         </header>
 
-        <main className="flex-1 overflow-auto bg-[#F1F5F9] relative">
-          <div className="p-6 max-w-[1600px] mx-auto min-h-full">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden bg-[#F1F5F9] relative">
+          <div className="p-4 sm:p-6 max-w-[1600px] mx-auto min-h-full">
             {children}
           </div>
         </main>
@@ -233,10 +335,10 @@ export default function DashboardLayout({
   );
 }
 
-function SidebarHeader({ label, collapsed }: { label: string; collapsed: boolean }) {
+function SidebarHeader({ label, collapsed, centered = false }: { label: string; collapsed: boolean; centered?: boolean }) {
   if (collapsed) return <div className="h-px bg-slate-100 my-4 mx-3" />;
   return (
-    <h3 className="px-3.5 text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] mb-2 mt-4">
+    <h3 className={cn("px-3.5 text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] mb-2 mt-4", centered && "text-center text-[11px]")}>
       {label}
     </h3>
   );
