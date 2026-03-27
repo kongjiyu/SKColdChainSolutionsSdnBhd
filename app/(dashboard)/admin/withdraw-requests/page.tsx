@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/tables/data-table";
 import { 
@@ -19,6 +19,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface AdminWithdrawOrder {
   id: string;
@@ -61,6 +69,12 @@ const mockGlobalOrders: AdminWithdrawOrder[] = [
 ];
 
 export default function AdminWithdrawListPage() {
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+
+  const handleExport = (format: "excel" | "pdf") => {
+    console.log("Exporting global withdraw requests as", format);
+    setIsExportDialogOpen(false);
+  };
   const columns: ColumnDef<AdminWithdrawOrder>[] = [
     {
       accessorKey: "withdrawNumber",
@@ -124,7 +138,7 @@ export default function AdminWithdrawListPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Global Withdraw Requests</h2>
           <p className="text-muted-foreground text-sm">
@@ -132,13 +146,42 @@ export default function AdminWithdrawListPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-            <Button variant="outline" className="gap-2">
-                <Download size={14} /> Global Export
-            </Button>
+          <Dialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                  <Download size={14} /> Global Export
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-sm">
+              <DialogHeader>
+                <DialogTitle>Export global withdraw requests</DialogTitle>
+                <DialogDescription>
+                  Choose a format to download the consolidated withdraw orders.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="mt-4 flex flex-col gap-3">
+                <Button
+                  onClick={() => handleExport("excel")}
+                  className="w-full justify-between h-10 text-[11px] font-black"
+                >
+                  <span>Export as Excel (.xlsx)</span>
+                  <Download size={14} className="opacity-80" />
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => handleExport("pdf")}
+                  className="w-full justify-between h-10 text-[11px] font-black"
+                >
+                  <span>Export as PDF (.pdf)</span>
+                  <Download size={14} className="text-slate-400" />
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         <StatusCard icon={Clock} label="Pending Sync" value="14" color="text-amber-600" />
         <StatusCard icon={CheckCircle2} label="Ready to Collect" value="28" color="text-blue-600" />
         <StatusCard icon={ClipboardList} label="Closed (Today)" value="156" color="text-emerald-600" />
@@ -163,14 +206,14 @@ export default function AdminWithdrawListPage() {
 
 function StatusCard({ icon: Icon, label, value, color }: { icon: any, label: string, value: string, color: string }) {
   return (
-    <div className="p-4 bg-card border border-border rounded-xl shadow-sm">
-        <div className="flex items-center gap-3 mb-1">
-            <div className={cn("p-1.5 rounded-lg bg-secondary/50", color)}>
-                <Icon size={14} />
+  <div className="p-3 sm:p-4 bg-card border border-border rounded-xl shadow-sm">
+    <div className="flex items-center gap-2 sm:gap-3 mb-1">
+      <div className={cn("p-1 rounded-lg bg-secondary/50", color)}>
+        <Icon size={12} />
             </div>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{label}</p>
+      <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{label}</p>
         </div>
-        <p className={cn("text-2xl font-black", color)}>{value}</p>
+    <p className={cn("text-xl sm:text-2xl font-black leading-none", color)}>{value}</p>
     </div>
   );
 }

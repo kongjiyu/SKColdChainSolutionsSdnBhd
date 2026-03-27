@@ -122,19 +122,19 @@ export default function PalletMovementPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
           <h2 className="text-2xl font-bold tracking-tight">Pallet Movement</h2>
           <p className="text-muted-foreground text-sm">
             Complete historical ledger of all stock inbound and outbound transactions.
           </p>
         </div>
-        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-            <History size={24} />
+        <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+            <History size={18} className="sm:h-6 sm:w-6" />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
         <SummaryCard 
             label="Total Inbound (MTD)" 
             value="1,240" 
@@ -149,13 +149,15 @@ export default function PalletMovementPage() {
             icon={ArrowUpRight}
             color="text-amber-600"
         />
-        <SummaryCard 
-            label="Net Change" 
-            value="+348" 
-            sub="Inventory growth trend" 
-            icon={ArrowRightLeft}
-            color="text-primary"
-        />
+        <div className="col-span-2 md:col-span-1">
+          <SummaryCard 
+              label="Net Change" 
+              value="+348" 
+              sub="Inventory growth trend" 
+              icon={ArrowRightLeft}
+              color="text-primary"
+          />
+        </div>
       </div>
 
       <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
@@ -176,13 +178,13 @@ export default function PalletMovementPage() {
 
 function SummaryCard({ label, value, sub, icon: Icon, color }: any) {
     return (
-        <div className="p-6 bg-card border border-border rounded-xl shadow-sm">
+    <div className="p-3 sm:p-4 bg-card border border-border rounded-xl shadow-sm">
             <div className="flex items-center justify-between mb-2">
-                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{label}</p>
-                <Icon className={cn("h-4 w-4", color)} />
+        <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{label}</p>
+        <Icon className={cn("h-3.5 w-3.5 sm:h-4 sm:w-4", color)} />
             </div>
-            <p className={cn("text-3xl font-black mb-1", color)}>{value}</p>
-            <p className="text-[10px] text-muted-foreground italic">{sub}</p>
+      <p className={cn("text-xl sm:text-2xl font-black mb-1 leading-none", color)}>{value}</p>
+      <p className="text-[9px] sm:text-[10px] text-muted-foreground italic">{sub}</p>
         </div>
     );
 }

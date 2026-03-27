@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/tables/data-table";
@@ -14,6 +14,14 @@ import {
   Download
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface PalletDetail {
   palletNumber: string;
@@ -35,6 +43,12 @@ export default function StockDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const itemId = params.id as string;
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+
+  const handleExport = (format: "excel" | "pdf") => {
+    console.log("Exporting pallet list as", format, "for", itemId);
+    setIsExportDialogOpen(false);
+  };
 
   const columns: ColumnDef<PalletDetail>[] = [
     {
@@ -85,7 +99,7 @@ export default function StockDetailsPage() {
           Back to Stock Summary
         </button>
         
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-4">
                 <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
                     <Box className="h-6 w-6 text-primary-foreground" />
@@ -97,9 +111,38 @@ export default function StockDetailsPage() {
                     </p>
                 </div>
             </div>
-            <Button variant="outline" className="gap-2">
-                <Download size={14} /> Export Pallet List
-            </Button>
+            <Dialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="gap-2">
+                    <Download size={14} /> Export Pallet List
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-sm">
+                <DialogHeader>
+                  <DialogTitle>Export pallet list</DialogTitle>
+                  <DialogDescription>
+                    Choose a format to download the pallet breakdown for this item.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="mt-4 flex flex-col gap-3">
+                  <Button
+                    onClick={() => handleExport("excel")}
+                    className="w-full justify-between h-10 text-[11px] font-black"
+                  >
+                    <span>Export as Excel (.xlsx)</span>
+                    <Download size={14} className="opacity-80" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => handleExport("pdf")}
+                    className="w-full justify-between h-10 text-[11px] font-black"
+                  >
+                    <span>Export as PDF (.pdf)</span>
+                    <Download size={14} className="text-slate-400" />
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
         </div>
       </div>
 

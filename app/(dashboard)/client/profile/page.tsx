@@ -74,7 +74,7 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-foreground">Account Profile</h2>
           <p className="text-muted-foreground text-sm">
@@ -113,7 +113,7 @@ export default function ProfilePage() {
                     <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <textarea 
                       id="invoiceDetails" 
-                      className="w-full min-h-[100px] pl-10 pr-3 py-2 rounded-md border border-input bg-transparent text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                      className="w-full min-h-[80px] sm:min-h-[100px] pl-10 pr-3 py-2 rounded-md border border-input bg-transparent text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                       {...profileForm.register("invoiceDetails")}
                     />
                   </div>
@@ -151,7 +151,7 @@ export default function ProfilePage() {
                     <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <textarea 
                       id="officeAddress" 
-                      className="w-full min-h-[80px] pl-10 pr-3 py-2 rounded-md border border-input bg-transparent text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                      className="w-full min-h-[96px] sm:min-h-[112px] pl-10 pr-3 py-2 rounded-md border border-input bg-transparent text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                       {...profileForm.register("officeAddress")}
                     />
                   </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/tables/data-table";
 import { 
@@ -16,6 +16,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface WithdrawOrder {
   id: string;
@@ -69,9 +77,35 @@ const mockOrders: WithdrawOrder[] = [
     totalQuantity: 60,
     status: "Cancel",
   },
+  {
+    id: "5",
+    orderNumber: "WDR-2024-005",
+    orderDate: "2024-03-13",
+    deliveryDate: "2024-03-18",
+    vehicleNumber: "JQL 7721",
+    totalItems: 4,
+    totalQuantity: 980,
+    status: "Ready",
+  },
+  {
+    id: "6",
+    orderNumber: "WDR-2024-006",
+    orderDate: "2024-03-14",
+    deliveryDate: "2024-03-19",
+    vehicleNumber: "NCE 4108",
+    totalItems: 2,
+    totalQuantity: 240,
+    status: "Pending",
+  },
 ];
 
 export default function WithdrawListPage() {
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+
+  const handleExport = (format: "excel" | "pdf") => {
+    console.log("Exporting client withdraw history as", format);
+    setIsExportDialogOpen(false);
+  };
   const columns: ColumnDef<WithdrawOrder>[] = [
     {
       accessorKey: "orderNumber",
@@ -165,7 +199,7 @@ export default function WithdrawListPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Withdraw History</h2>
           <p className="text-muted-foreground text-sm">
@@ -173,13 +207,42 @@ export default function WithdrawListPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-            <Button variant="outline" className="gap-2">
-                <Download size={14} /> Export Report
-            </Button>
+          <Dialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                  <Download size={14} /> Export Report
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-sm">
+              <DialogHeader>
+                <DialogTitle>Export withdraw history</DialogTitle>
+                <DialogDescription>
+                  Choose a format to download your withdraw history.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="mt-4 flex flex-col gap-3">
+                <Button
+                  onClick={() => handleExport("excel")}
+                  className="w-full justify-between h-10 text-[11px] font-black"
+                >
+                  <span>Export as Excel (.xlsx)</span>
+                  <Download size={14} className="opacity-80" />
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => handleExport("pdf")}
+                  className="w-full justify-between h-10 text-[11px] font-black"
+                >
+                  <span>Export as PDF (.pdf)</span>
+                  <Download size={14} className="text-slate-400" />
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         <OrderStats label="Total Requests" value="128" color="bg-primary/10 text-primary" />
         <OrderStats label="Pending Processing" value="12" color="bg-amber-100 text-amber-600" />
         <OrderStats label="Ready for Collection" value="5" color="bg-blue-100 text-blue-600" />
@@ -201,11 +264,11 @@ export default function WithdrawListPage() {
 
 function OrderStats({ label, value, color }: { label: string, value: string, color: string }) {
   return (
-    <div className="p-4 bg-card border border-border rounded-xl shadow-sm">
-        <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-1">{label}</p>
-        <div className="flex items-center gap-3">
-            <p className="text-2xl font-black text-foreground">{value}</p>
-            <div className={cn("px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-tighter", color)}>
+  <div className="p-3 sm:p-4 bg-card border border-border rounded-xl shadow-sm">
+    <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-1">{label}</p>
+    <div className="flex items-center gap-2 sm:gap-3">
+      <p className="text-xl sm:text-2xl font-black text-foreground leading-none">{value}</p>
+      <div className={cn("px-1 py-0.5 sm:px-1.5 rounded text-[7px] sm:text-[8px] font-bold uppercase tracking-tighter", color)}>
                 Stats Live
             </div>
         </div>

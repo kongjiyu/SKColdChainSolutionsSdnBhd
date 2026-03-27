@@ -22,6 +22,14 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface StockSummary {
   storer: string;
@@ -95,6 +103,12 @@ const mockData: StockSummary[] = [
 
 export default function StockSummaryPage() {
   const [activeFilter, setActiveFilter] = useState("All");
+    const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+
+    const handleExport = (format: "excel" | "pdf") => {
+        console.log("Exporting client stock summary as", format);
+        setIsExportDialogOpen(false);
+    };
 
   const columns: ColumnDef<StockSummary>[] = [
     {
@@ -223,11 +237,11 @@ export default function StockSummaryPage() {
         className="space-y-6 pb-12"
     >
       {/* Editorial Hero Section */}
-      <section className="bg-white rounded-3xl p-8 border border-slate-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden group">
+            <section className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden group">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -mr-32 -mt-32 blur-3xl pointer-events-none group-hover:bg-primary/10 transition-colors duration-700"></div>
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-emerald-500/5 rounded-full -ml-16 -mb-16 blur-3xl pointer-events-none"></div>
         
-        <div className="relative flex flex-col xl:flex-row xl:items-center justify-between gap-10">
+        <div className="relative flex flex-col xl:flex-row xl:items-center justify-between gap-8 xl:gap-10">
             <div className="max-w-xl">
                 <div className="flex items-center gap-2 mb-4">
                     <div className="h-5 w-5 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
@@ -235,11 +249,11 @@ export default function StockSummaryPage() {
                     </div>
                     <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Strategic Overview</span>
                 </div>
-                <h2 className="text-5xl font-black tracking-tighter text-slate-900 leading-[0.85]">STOCK <span className="text-slate-300">SUMMARY</span></h2>
-                <p className="text-slate-500 text-[13px] font-bold tracking-tight mt-4 leading-relaxed max-w-sm">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-slate-900 leading-tight">STOCK <span className="text-slate-300">SUMMARY</span></h2>
+                <p className="hidden sm:block text-slate-500 text-[13px] font-bold tracking-tight mt-4 leading-relaxed max-w-sm">
                     Your real-time inventory performance and risk analysis for <span className="text-slate-900 font-black">Nestle Malaysia</span>.
                 </p>
-                <div className="flex items-center gap-6 mt-8">
+                <div className="hidden sm:flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mt-8">
                     <div className="flex flex-col">
                         <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Global Status</span>
                         <div className="flex items-center gap-2 mt-1">
@@ -247,7 +261,7 @@ export default function StockSummaryPage() {
                             <span className="text-[12px] font-black text-slate-900 uppercase">Secure • SAP Sync</span>
                         </div>
                     </div>
-                    <div className="w-px h-8 bg-slate-100"></div>
+                    <div className="hidden sm:block w-px h-8 bg-slate-100"></div>
                     <div className="flex flex-col">
                         <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Active Alerts</span>
                         <div className="flex items-center gap-2 mt-1">
@@ -258,18 +272,39 @@ export default function StockSummaryPage() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {/* Desktop / tablet KPI cards */}
+            <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <KPICard icon={Box} label="TOTAL PALLETS" value="100" trend="+6" color="slate" />
                 <KPICard icon={TrendingUp} label="UNIT QUANTITY" value="12,040" trend="+12%" color="primary" />
                 <KPICard icon={ThermometerSnowflake} label="COLD STORAGE" value="68" subtitle="Units" color="blue" />
                 <HUDIndicator label="RISK INDEX" value="Low" color="emerald" />
             </div>
+
+            {/* Mobile-optimised compact stats (no icons) */}
+            <div className="grid grid-cols-2 gap-3 md:hidden">
+                <div className="rounded-2xl border border-slate-200 bg-white px-3 py-2 flex flex-col justify-center">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">TOTAL PALLETS</p>
+                    <p className="text-xl font-black tracking-tighter text-slate-900 mt-1 leading-none">100</p>
+                </div>
+                <div className="rounded-2xl border border-slate-200 bg-white px-3 py-2 flex flex-col justify-center">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">UNIT QUANTITY</p>
+                    <p className="text-xl font-black tracking-tighter text-slate-900 mt-1 leading-none">12,040</p>
+                </div>
+                <div className="rounded-2xl border border-slate-200 bg-white px-3 py-2 flex flex-col justify-center">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">COLD STORAGE</p>
+                    <p className="text-xl font-black tracking-tighter text-slate-900 mt-1 leading-none">68</p>
+                </div>
+                <div className="rounded-2xl border border-slate-200 bg-emerald-50 px-3 py-2 flex flex-col justify-center">
+                    <p className="text-[9px] font-black text-emerald-600/70 uppercase tracking-widest leading-none">RISK INDEX</p>
+                    <p className="text-xl font-black tracking-tighter text-emerald-600 mt-1 leading-none">Low</p>
+                </div>
+            </div>
         </div>
       </section>
 
-      {/* Modern Filter Tab Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 px-1">
-        <div className="flex items-center gap-2 p-1.5 bg-slate-100/50 backdrop-blur-sm rounded-2xl border border-slate-200/50">
+            {/* Modern Filter Tab Bar */}
+            <div className="flex flex-wrap items-center justify-between gap-4 px-1">
+                <div className="flex flex-wrap items-center gap-2 p-1.5 bg-slate-100/50 backdrop-blur-sm rounded-2xl border border-slate-200/50">
             {filters.map((f) => (
                 <button
                     key={f.name}
@@ -290,21 +325,49 @@ export default function StockSummaryPage() {
             ))}
         </div>
 
-        <div className="flex items-center gap-3">
-            <button className="h-10 px-5 bg-white border border-slate-200 rounded-2xl text-[11px] font-black text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2 group shadow-sm">
-                <Filter size={14} className="text-slate-400 group-hover:text-primary transition-colors" />
-                ADVANCED FILTERS
-            </button>
-            <button className="h-10 px-5 bg-slate-900 text-white rounded-2xl text-[11px] font-black hover:bg-slate-800 transition-all flex items-center gap-2 shadow-xl shadow-slate-900/10 active:scale-95">
-                <Download size={14} strokeWidth={3} />
-                EXPORT LEDGER
-            </button>
-        </div>
+                <div className="flex flex-wrap items-center gap-3">
+                        <button className="h-10 px-5 bg-white border border-slate-200 rounded-2xl text-[11px] font-black text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2 group shadow-sm">
+                                <Filter size={14} className="text-slate-400 group-hover:text-primary transition-colors" />
+                                ADVANCED FILTERS
+                        </button>
+                        <Dialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen}>
+                            <DialogTrigger asChild>
+                                <button className="h-10 px-5 bg-slate-900 text-white rounded-2xl text-[11px] font-black hover:bg-slate-800 transition-all flex items-center gap-2 shadow-xl shadow-slate-900/10 active:scale-95">
+                                    <Download size={14} strokeWidth={3} />
+                                    EXPORT LEDGER
+                                </button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-sm">
+                                <DialogHeader>
+                                    <DialogTitle>Export Inventory Ledger</DialogTitle>
+                                    <DialogDescription>
+                                        Choose a format to download this stock summary.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="mt-4 flex flex-col gap-3">
+                                    <button
+                                        onClick={() => handleExport("excel")}
+                                        className="h-10 px-4 rounded-xl bg-slate-900 text-white text-[11px] font-black hover:bg-slate-800 transition-colors flex items-center justify-between"
+                                    >
+                                        <span>Export as Excel (.xlsx)</span>
+                                        <Download size={14} className="opacity-80" />
+                                    </button>
+                                    <button
+                                        onClick={() => handleExport("pdf")}
+                                        className="h-10 px-4 rounded-xl border border-slate-200 bg-white text-[11px] font-black text-slate-700 hover:bg-slate-50 transition-colors flex items-center justify-between"
+                                    >
+                                        <span>Export as PDF (.pdf)</span>
+                                        <Download size={14} className="text-slate-400" />
+                                    </button>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                </div>
       </div>
 
       {/* Elegant Table Section */}
-      <section className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden group">
-        <div className="px-8 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between bg-white gap-4">
+            <section className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden group">
+                <div className="px-4 sm:px-8 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between bg-white gap-4">
             <div className="flex items-center gap-4">
                 <div className="h-10 w-10 rounded-2xl bg-slate-50 flex items-center justify-center border border-slate-100 group-hover:scale-110 transition-transform">
                     <Box size={18} className="text-slate-600" />
@@ -328,9 +391,9 @@ export default function StockSummaryPage() {
       </section>
 
       {/* Insight Footer Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         <div className="lg:col-span-8 space-y-4">
-            <div className="flex items-center justify-between px-2">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-2">
                 <div className="flex items-center gap-2">
                     <AlertTriangle size={14} className="text-rose-500" />
                     <h4 className="text-[11px] font-black text-slate-900 uppercase tracking-widest">Risk Analysis • High Priority</h4>
@@ -407,7 +470,7 @@ export default function StockSummaryPage() {
                                 <Clock size={16} strokeWidth={2.5} />
                             </div>
                             <div className="flex-1 min-w-0 py-0.5">
-                                <div className="flex items-center justify-between gap-2">
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5">
                                     <p className="text-[12px] text-slate-900 tracking-tight truncate group-hover:text-primary transition-colors">
                                         <span className="font-medium">{activity.type.toUpperCase()}</span>
                                         <span className="font-normal">: {activity.label}</span>
@@ -455,7 +518,7 @@ function KPICard({
     };
 
     return (
-        <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all group min-w-[150px]">
+        <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all group min-w-0 sm:min-w-[150px]">
             <div className="flex items-center justify-between mb-4">
                 <div className={cn("h-10 w-10 rounded-2xl flex items-center justify-center transition-all duration-300 border", colorMap[color])}>
                     <Icon size={18} strokeWidth={2.5} />

@@ -47,6 +47,21 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  const tableContainerRef = React.useRef<HTMLDivElement>(null);
+
+  const checkScroll = () => {
+    if (tableContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = tableContainerRef.current;
+      setCanScrollRight(Math.ceil(scrollLeft) < scrollWidth - clientWidth - 2); // 2px buffer
+    }
+  };
+
+  React.useEffect(() => {
+    checkScroll();
+    window.addEventListener("resize", checkScroll);
+    return () => window.removeEventListener("resize", checkScroll);
+  }, [data, columns]);
 
   const table = useReactTable({
     data,
@@ -120,7 +135,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-0">
       {!hideToolbar && (
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 bg-white border-b border-slate-200">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 bg-white border-b border-slate-200">
           <div className="relative flex-1 max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
             <input
@@ -136,8 +151,27 @@ export function DataTable<TData, TValue>({
         </div>
       )}
 
-      <div className="overflow-x-auto scrollbar-hide">
-        <table className="w-full text-sm text-left border-separate border-spacing-0">
+      <div className="relative group/table">
+        <AnimatePresence>
+          {canScrollRight && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white via-white/80 to-transparent pointer-events-none z-10 flex items-center justify-end pr-2 md:hidden"
+            >
+              <div className="h-6 w-6 rounded-full bg-white/80 shadow-sm border border-slate-200 flex items-center justify-center animate-pulse">
+                <ChevronRight className="h-4 w-4 text-primary" />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <div 
+          ref={tableContainerRef}
+          onScroll={checkScroll}
+          className="overflow-x-auto scrollbar-hide"
+        >
+          <table className="w-full text-sm text-left border-separate border-spacing-0">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -151,9 +185,9 @@ export function DataTable<TData, TValue>({
                     <th 
                       key={header.id} 
                       className={cn(
-                          "px-4 py-3 whitespace-nowrap text-[10px] font-black uppercase tracking-wider text-slate-700 border-b border-slate-200 bg-slate-100/50 transition-colors",
-                          idx === 0 && "pl-6",
-                          idx === table.getAllColumns().length - 1 && "pr-6",
+                          "px-3 py-2 sm:px-4 sm:py-3 whitespace-nowrap text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-slate-700 border-b border-slate-200 bg-slate-100/50 transition-colors",
+                          idx === 0 && "pl-4 sm:pl-6",
+                          idx === table.getAllColumns().length - 1 && "pr-4 sm:pr-6",
                           header.column.getCanSort() && "cursor-pointer hover:bg-slate-200/50"
                       )}
                       onClick={header.column.getToggleSortingHandler()}
@@ -202,9 +236,9 @@ export function DataTable<TData, TValue>({
                       <td 
                           key={cell.id} 
                           className={cn(
-                              "px-4 py-3 whitespace-nowrap text-[13px] text-slate-600 font-medium",
-                              idx === 0 && "pl-6",
-                              idx === row.getVisibleCells().length - 1 && "pr-6"
+                              "px-3 py-2 sm:px-4 sm:py-3 whitespace-nowrap text-xs sm:text-[13px] text-slate-600 font-medium",
+                              idx === 0 && "pl-4 sm:pl-6",
+                              idx === row.getVisibleCells().length - 1 && "pr-4 sm:pr-6"
                           )}
                       >
                         {flexRender(
@@ -229,8 +263,9 @@ export function DataTable<TData, TValue>({
           </tbody>
         </table>
       </div>
+      </div>
 
-      <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-3 bg-white border-t border-slate-200 gap-4">
+      <div className="flex flex-col sm:flex-row items-center justify-between px-4 sm:px-6 py-3 bg-white border-t border-slate-200 gap-4">
         <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
           Showing <span className="text-slate-900">{table.getFilteredRowModel().rows.length}</span> Results
         </div>
